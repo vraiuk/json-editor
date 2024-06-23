@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codetailor/split-json": "^1.0.3",
+    "@tanstack/react-table": "^8.17.3",
+    "@tanstack/react-virtual": "^3.7.0",
+    "axios": "^1.7.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

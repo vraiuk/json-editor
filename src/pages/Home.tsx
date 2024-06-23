@@ -1,19 +1,12 @@
-import { useState, useEffect } from 'react';
-import sampleData from '../assets/json-data.json';
-import { JSONDataType } from '../types';
-import JSONEditor from '../components/JSONEditor';
+import Table from '../components/Table.tsx';
+import mockedData from '../assets/json-data.json'; // 1000 entities
+// import mockedData from '../assets/big-data.json'; // 10 000 entities
+// import mockedData from '../assets/ultra-big-data.json'; // 100 000 entities
 
 function Home() {
-	const [data, setData] = useState<JSONDataType[]>([]);
-
-	useEffect(() => {
-		// Load data
-		setData(sampleData);
-	}, []);
-
 	return (
-		<div className="container mx-auto p-4">
-			<JSONEditor data={data} />
+		<div className="mx-4 p-4">
+			<Table data={mockedData} />
 		</div>
 	);
 }
