@@ -5,26 +5,37 @@ interface JSONRowProps {
     data: JSONDataType;
 }
 
-const selectInputType = (key: string, value: unknown) => {
+const selectInputType = (key: string, value: string) => {
 	switch (key) {
 	case 'id':
-		return (<>'text'</>);
+		return (<input type="text" name="id-input" value={value} disabled />);
 	case 'isActive':
-		return (<>'boolean'</>);
+		return (
+			<div className="grid grid-cols-2 items-center">
+				<input className="w-[20px] h-[20px]" type="radio" name="activity-input" value="true" />
+				<label>true</label>
+				<input className="w-[20px] h-[20px]" type="radio" name="activity-input" value="false" />
+				<label>false</label>
+			</div>
+		);
 	case 'picture':
-		return (<>'text'</>);
+		return (<input type="text" name="picture-input" value={value} />);
 	case 'age':
-		return (<>'number'</>);
+		return (<input type="number" name="age-input" value={value} />);
 	case 'name':
-		return (<>'text'</>);
+		return (<input type="text" name="name-input" value={value} />);
 	case 'email':
-		return (<>'email'</>);
+		return (<input type="email" name="email-input" value={value} />);
 	case 'address':
-		return (<>'text'</>);
+		return (<input type="text" name="address-input" value={value} />);
 	case 'about':
-		return (<>'textarea'</>);
+		return (
+			<textarea name="textarea-input" rows={3} cols={150}>
+				{value}
+			</textarea>
+		);
 	case 'registered':
-		return (<>'date'</>);
+		return (<input type="date" name="date-input" value={value} />);
 	default:
 		return (<></>);
 	}
