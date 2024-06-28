@@ -17,6 +17,7 @@ function TableVirtualized({ data }: EditorProps) {
 
 	const parentRef = useRef<HTMLDivElement>(null);
 
+	// actually, we could use useReactTable() here to implement filters
 	const virtualizer = useVirtualizer({
 		count: rows.length,
 		getScrollElement: () => parentRef.current,
