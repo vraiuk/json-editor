@@ -5,9 +5,7 @@ import mockedData from '../assets/json-data.json'; // 1000 entities
 
 function Home() {
 	return (
-		<div className="mx-4 p-4">
-			<Table data={mockedData} />
-		</div>
+		<Table data={mockedData} />
 	);
 }
 
