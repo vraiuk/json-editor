@@ -19,6 +19,7 @@ npm run lint
 ```
 
 ## Notes
+App is available at url: https://vraiuk.github.io/json-editor/
 - The data is located in `src/assets`.
 
 To change number of entities in the table change import of mocked data inside Home component
