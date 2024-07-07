@@ -1,57 +1,47 @@
 import { MemoRow } from './Row.tsx';
 import { DataValueType, DataType, DataKeyType } from '../types';
-import { useCallback, useState, useRef } from 'react';
-import { useVirtualizer } from '@tanstack/react-virtual';
+import { useCallback, useState, UIEvent } from 'react';
+import { Filter } from './Filter.tsx';
 
 interface EditorProps {
     data: DataType[];
+    itemHeight: number;
+    containerHeight: number;
+    overscan: number;
 }
 
-function TableVirtualized({ data }: EditorProps) {
+function TableVirtualized({
+	data, itemHeight, containerHeight, overscan,
+}: EditorProps) {
 	const [rows, setRows] = useState(() => data);
+	const [filteredRows, setFilteredRows] = useState(() => data);
+	const [scrollTop, setScrollTop] = useState(0);
 
 	const updateRowData = useCallback((id: string, key: DataKeyType, value: DataValueType) => {
 		setRows(oldData => (oldData.map(row =>
 			(row.id === id ? { ...row, [key]: value } : row))));
 	}, [setRows]);
 
-	const parentRef = useRef<HTMLDivElement>(null);
-
-	// actually, we could use useReactTable() here to implement filters
-	const virtualizer = useVirtualizer({
-		count: rows.length,
-		getScrollElement: () => parentRef.current,
-		estimateSize: () => 80,
-		overscan: 5,
-	});
-	const items = virtualizer.getVirtualItems();
+	const startIndex = Math.floor(scrollTop / itemHeight);
+	const endIndex = Math.min(
+		startIndex + Math.ceil(containerHeight / itemHeight),
+		filteredRows.length
+	);
+	const visibleItems = filteredRows.slice(startIndex, endIndex + overscan < filteredRows.length ? endIndex + overscan : endIndex);
+	const invisibleItemsHeight = (startIndex + visibleItems.length - endIndex) * itemHeight;
+	const handleScroll = (event: UIEvent<HTMLDivElement>) => {
+		setScrollTop(event.currentTarget.scrollTop);
+	};
 
 	return (
 		<div
-			ref={parentRef}
-			style={{
-				height: '100vh',
-				width: '100vw',
-				overflowY: 'auto',
-				contain: 'strict',
-			}}
+			style={{ height: `${containerHeight}px`, overflowY: 'scroll' }}
+			onScroll={handleScroll}
 		>
-			<div
-				style={{
-					height: virtualizer.getTotalSize(),
-					width: '100%',
-					position: 'relative',
-				}}
-			>
+			<div style={{ height: `${filteredRows.length * itemHeight}px` }}>
+				<Filter data={rows} setData={setFilteredRows} />
 				<table
 					className="min-w-full bg-white border border-gray-300 "
-					style={{
-						position: 'absolute',
-						top: 0,
-						left: 0,
-						width: '100%',
-						transform: `translateY(${items[0]?.start ?? 0}px)`,
-					}}
 				>
 					<thead className="bg-gray-200">
 						<tr className="flex gap-1">
@@ -60,15 +50,20 @@ function TableVirtualized({ data }: EditorProps) {
 							))}
 						</tr>
 					</thead>
-					<tbody>
-						{items.map((virtualRow) => {
-							const row = rows[virtualRow.index];
-
-							return (
-								<MemoRow key={`${row.id}-row`} rowData={row} onUpdate={updateRowData} />
-							);
-						})}
+					<tbody
+						style={{
+							position: 'relative',
+							height: `${visibleItems.length * itemHeight}px`,
+							top: `${startIndex * itemHeight}px`,
+						}}
+					>
+						{
+							visibleItems.map(virtualRow => (
+								<MemoRow key={`${virtualRow.id}-row`} rowData={virtualRow} onUpdate={updateRowData} />
+							))
+						}
 					</tbody>
+					<tfoot style={{ height: `${invisibleItemsHeight}px` }} />
 				</table>
 			</div>
 		</div>

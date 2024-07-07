@@ -5,7 +5,7 @@ import mockedData from '../assets/json-data.json'; // 1000 entities
 
 function Home() {
 	return (
-		<Table data={mockedData} />
+		<Table data={mockedData} itemHeight={80} containerHeight={window.innerHeight} overscan={10} />
 	);
 }
 
