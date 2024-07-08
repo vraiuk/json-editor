@@ -19,6 +19,8 @@ npm run lint
 ```
 
 ## Notes
+Challenge description is located in `docs/Coding_Challenge.pdf`.
+
 App is available at url: https://vraiuk.github.io/json-editor/
 - The data is located in `src/assets`.
 

@@ -5,7 +5,7 @@ import { DataType } from '../types';
 
 export function Filter({ data, setData }: { data: DataType[], setData: Dispatch<SetStateAction<DataType[]>> }) {
 	const [filterValue, setFilterValue] = useState('');
-	// TODO: ask how to deal with date?
+
 	useEffect(() => {
 		setData(data.filter(rowValue => (
 			Object.values(rowValue).some(value => value.toString().includes(filterValue))

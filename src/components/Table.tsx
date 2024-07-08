@@ -1,6 +1,8 @@
 import { MemoRow } from './Row.tsx';
 import { DataValueType, DataType, DataKeyType } from '../types';
-import { useCallback, useState, UIEvent } from 'react';
+import {
+	useCallback, useState, UIEvent, memo,
+} from 'react';
 import { Filter } from './Filter.tsx';
 
 interface EditorProps {
@@ -17,19 +19,19 @@ function TableVirtualized({
 	const [filteredRows, setFilteredRows] = useState(() => data);
 	const [scrollTop, setScrollTop] = useState(0);
 
+	const startIndex = Math.max(Math.floor(scrollTop / itemHeight) - overscan, 0);
+	const endIndex = Math.min(startIndex + Math.ceil(containerHeight / itemHeight) + overscan, filteredRows.length);
+	const visibleItems = filteredRows.slice(startIndex, endIndex);
+	const invisibleItemsHeight = (startIndex + visibleItems.length - endIndex) * itemHeight;
+
 	const updateRowData = useCallback((id: string, key: DataKeyType, value: DataValueType) => {
 		setRows(oldData => (oldData.map(row =>
 			(row.id === id ? { ...row, [key]: value } : row))));
 	}, [setRows]);
 
-	const startIndex = Math.max(Math.floor(scrollTop / itemHeight) - overscan, 0);
-	const endIndex = Math.min(startIndex + Math.ceil(containerHeight / itemHeight) + overscan, filteredRows.length);
-
-	const visibleItems = filteredRows.slice(startIndex, endIndex);
-	const invisibleItemsHeight = (startIndex + visibleItems.length - endIndex) * itemHeight;
-	const handleScroll = (event: UIEvent<HTMLDivElement>) => {
+	const handleScroll = useCallback((event: UIEvent<HTMLDivElement>) => {
 		setScrollTop(event.currentTarget.scrollTop);
-	};
+	}, [setScrollTop]);
 
 	return (
 		<div
@@ -69,3 +71,4 @@ function TableVirtualized({
 }
 
 export default TableVirtualized;
+export const MemoTable = memo(TableVirtualized);
