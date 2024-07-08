@@ -22,12 +22,10 @@ function TableVirtualized({
 			(row.id === id ? { ...row, [key]: value } : row))));
 	}, [setRows]);
 
-	const startIndex = Math.floor(scrollTop / itemHeight);
-	const endIndex = Math.min(
-		startIndex + Math.ceil(containerHeight / itemHeight),
-		filteredRows.length
-	);
-	const visibleItems = filteredRows.slice(startIndex, endIndex + overscan < filteredRows.length ? endIndex + overscan : endIndex);
+	const startIndex = Math.max(Math.floor(scrollTop / itemHeight) - overscan, 0);
+	const endIndex = Math.min(startIndex + Math.ceil(containerHeight / itemHeight), filteredRows.length);
+
+	const visibleItems = filteredRows.slice(startIndex, endIndex);
 	const invisibleItemsHeight = (startIndex + visibleItems.length - endIndex) * itemHeight;
 	const handleScroll = (event: UIEvent<HTMLDivElement>) => {
 		setScrollTop(event.currentTarget.scrollTop);
