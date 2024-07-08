@@ -23,7 +23,7 @@ function TableVirtualized({
 	}, [setRows]);
 
 	const startIndex = Math.max(Math.floor(scrollTop / itemHeight) - overscan, 0);
-	const endIndex = Math.min(startIndex + Math.ceil(containerHeight / itemHeight), filteredRows.length);
+	const endIndex = Math.min(startIndex + Math.ceil(containerHeight / itemHeight) + overscan, filteredRows.length);
 
 	const visibleItems = filteredRows.slice(startIndex, endIndex);
 	const invisibleItemsHeight = (startIndex + visibleItems.length - endIndex) * itemHeight;
